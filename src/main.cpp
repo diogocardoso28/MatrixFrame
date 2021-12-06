@@ -2,41 +2,45 @@
 #include <FastLED.h>
 #include <FastLED_GFX.h>
 #include <JPEGDecoder.h>
-
-// #include "displayFunctions.h"
+#include <GifDecoder.h>
+#include <string.h>
 #include <FS.h>
-#include "gif.h"
 
 #define LED_PIN 2
 #define COLOR_ORDER GRB
 #define CHIPSET WS2812B
-#define BRIGHTNESS 35
+#define BRIGHTNESS 30
 
 #define CANVAS_WIDTH 16
 #define CANVAS_HEIGHT 16
+
 #define NUM_LEDS 256
 
 GFXcanvas canvas(16, 16);
 
 CRGB leds[256];
+File file;
 
-const uint8_t remap[16][16] = {
-    {15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0},
-    {16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31},
-    {47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32},
-    {48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63},
-    {79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 67, 66, 65, 64},
-    {80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95},
-    {111, 110, 109, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96},
-    {112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127},
-    {143, 142, 141, 140, 139, 138, 137, 136, 135, 134, 133, 132, 131, 130, 129, 128},
-    {144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159},
-    {175, 174, 173, 172, 171, 170, 169, 168, 167, 166, 165, 164, 163, 162, 161, 160},
-    {176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191},
-    {207, 206, 205, 204, 203, 202, 201, 200, 199, 198, 197, 196, 195, 194, 193, 192},
-    {208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223},
-    {239, 238, 237, 236, 235, 234, 233, 232, 231, 230, 229, 228, 227, 226, 225, 224},
-    {240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255}};
+const uint8_t PROGMEM gamma8[] = {
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2,
+    2, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5,
+    5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10,
+    10, 10, 11, 11, 11, 12, 12, 13, 13, 13, 14, 14, 15, 15, 16, 16,
+    17, 17, 18, 18, 19, 19, 20, 20, 21, 21, 22, 22, 23, 24, 24, 25,
+    25, 26, 27, 27, 28, 29, 29, 30, 31, 32, 32, 33, 34, 35, 35, 36,
+    37, 38, 39, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 50,
+    51, 52, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 66, 67, 68,
+    69, 70, 72, 73, 74, 75, 77, 78, 79, 81, 82, 83, 85, 86, 87, 89,
+    90, 92, 93, 95, 96, 98, 99, 101, 102, 104, 105, 107, 109, 110, 112, 114,
+    115, 117, 119, 120, 122, 124, 126, 127, 129, 131, 133, 135, 137, 138, 140, 142,
+    144, 146, 148, 150, 152, 154, 156, 158, 160, 162, 164, 167, 169, 171, 173, 175,
+    177, 180, 182, 184, 186, 189, 191, 193, 196, 198, 200, 203, 205, 208, 210, 213,
+    215, 218, 220, 223, 225, 228, 231, 233, 236, 239, 241, 244, 247, 249, 252, 255};
+
+GifDecoder<CANVAS_WIDTH, CANVAS_HEIGHT, 12> decoder;
+void drawPixel(int x, int y, CRGB COLOR);
 
 void displayJpegMatrix(String path)
 {
@@ -105,12 +109,10 @@ void displayJpegMatrix(String path)
           Serial.print(" b: ");
           Serial.println(b);
 
-          canvas.drawPixel(y, x, CRGB(r, g, b));
-          delay(10);
-
-          FastLED.show();
+          canvas.drawPixel(y, x, CRGB(pgm_read_byte(&gamma8[r]), pgm_read_byte(&gamma8[g]), pgm_read_byte(&gamma8[b])));
         }
       }
+      FastLED.show();
     }
   }
   else
@@ -118,10 +120,62 @@ void displayJpegMatrix(String path)
     Serial.println("ERROR");
   }
 }
+void screenClearCallback(void)
+{
+  canvas.fillScreen(CRGB::Black);
+}
 
+void updateScreenCallback(void)
+{
+  FastLED.show();
+}
+
+void drawPixelCallback(int16_t x, int16_t y, uint8_t red, uint8_t green, uint8_t blue)
+{
+
+  drawPixel(y, x, CRGB(pgm_read_byte(&gamma8[red]), pgm_read_byte(&gamma8[green]), pgm_read_byte(&gamma8[blue])));
+}
+
+bool fileSeekCallback(unsigned long position)
+{
+  return file.seek(position);
+}
+
+unsigned long filePositionCallback(void)
+{
+  return file.position();
+}
+
+int fileReadCallback(void)
+{
+  return file.read();
+}
+
+int fileSizeCallback(void)
+{
+  return file.size();
+}
+
+int fileReadBlockCallback(void *buffer, int numberOfBytes)
+{
+  return file.read((uint8_t *)buffer, numberOfBytes);
+}
+
+void drawPixel(int x, int y, CRGB COLOR)
+{
+  if (y == 0 || y % 2 == 0)
+  {
+    canvas.drawPixel(x, y, COLOR);
+  }
+  else
+  {
+    canvas.drawPixel((CANVAS_WIDTH - x) - 1, y, COLOR);
+  }
+}
 void setup()
 {
   Serial.begin(9600);
+
   bool success = SPIFFS.begin();
   if (!success)
   {
@@ -138,17 +192,65 @@ void setup()
     str += dir.fileSize();
     str += "\r\n";
   }
-  Serial.print(str);
-  FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(canvas.getBuffer(), NUM_LEDS).setCorrection(Typical8mmPixel);
-  FastLED.setBrightness(BRIGHTNESS);
-  // drawBMP(Webp, canvas, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-  displayJpegMatrix("/mario16.jpg");
+  Serial.print(str);
+  FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(canvas.getBuffer(), NUM_LEDS);
+  FastLED.setBrightness(BRIGHTNESS);
+  set_max_power_in_volts_and_milliamps(5, 1500);
+
+  // GifDecoder Setup
+  decoder.setScreenClearCallback(screenClearCallback);
+  decoder.setUpdateScreenCallback(updateScreenCallback);
+  decoder.setDrawPixelCallback(drawPixelCallback);
+
+  decoder.setFileSeekCallback(fileSeekCallback);
+  decoder.setFilePositionCallback(filePositionCallback);
+  decoder.setFileReadCallback(fileReadCallback);
+
+  decoder.setFileReadBlockCallback(fileReadBlockCallback);
+  decoder.setFileSizeCallback(fileSizeCallback);
+
+  // displayJpegMatrix("/mario16.jpg");
+
+  if (file)
+    file.close();
+
+  // Attempt to open the file for reading
+  file = SPIFFS.open("/gif/nyan.gif", "r");
+  if (!file)
+  {
+    Serial.println("Error opening GIF file");
+    // return -1;
+  }
+
   FastLED.show();
 }
 
 void loop()
 {
+  static unsigned long displayStartTime_millis;
+  static int nextGIF = 1; // we haven't loaded a GIF yet on first pass through, make sure we do that
 
-  // delay(500);
+  unsigned long now = millis();
+
+  static int index = 0;
+
+  if (index == 0)
+  {
+
+    if (decoder.startDecoding() < 0)
+    {
+      Serial.println("GIF DONE");
+    }
+    index++;
+  }
+  // delay();
+
+  if (decoder.decodeFrame() < 0)
+  {
+    // There's an error with this GIF, go to the next one
+    Serial.println("Error decoding");
+  }
+  // index++;
+  // file.close();
 }

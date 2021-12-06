@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "jpegdecoder.h": "c",
+        "displayfunctions.h": "c",
+        "typeinfo": "cpp"
+    }
+}
