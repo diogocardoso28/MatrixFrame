@@ -7,6 +7,8 @@
 #define DISPLAYFUNCTIONS_H_
 
 /*Panel Settings*/
+/**********************************************/
+/*CHANGE according to your pannel and PSU */
 #define CANVAS_WIDTH 16
 #define CANVAS_HEIGHT 16
 #define NUM_LEDS 256
@@ -19,7 +21,7 @@
 
 #define PANEL_VOLTAGE 5
 #define PSU_CURRENT_MILIAMPS 1500
-
+/**********************************************/
 void inicializeFastled();
 void displayJpegMatrix(String path);
 void drawPixel(int x, int y, CRGB COLOR);
