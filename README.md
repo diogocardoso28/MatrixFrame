@@ -7,4 +7,6 @@ To configure pannel settings head to include\displayFunctions.h and change setti
 ### Road Map
 - [x] Display gifs from FileSystem
 - [ ] Create Web interface
-- [ ] Save settings and state to filesystem
+- [ ] Save settings and state to filesystem\
+### Video Demo
+![panel](https://user-images.githubusercontent.com/65686179/179860826-1763d017-e67a-4c39-995c-631de3e2288e.gif)
