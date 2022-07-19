@@ -3,20 +3,17 @@
 #include <string.h>
 #include <FastLED.h>
 #include <FastLED_GFX.h>
+#include <GifDecoder.h>
+
+#include "gammaTable.c"
+#include "filesystem.h"
+#include "displayFunctions.h"
 
 // Global variable declaration
 GFXcanvas canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
 CRGB leds[NUM_LEDS];
 
-// Function Headers
-void drawPixel(int x, int y, CRGB COLOR);
-void displayJpegMatrix(String path);
-void screenClearCallback(void);
-void updateScreenCallback(void);
-void drawPixelCallback(int16_t x, int16_t y, uint8_t red, uint8_t green, uint8_t blue);
-
-// Functions
-
+GifDecoder<CANVAS_WIDTH, CANVAS_HEIGHT, 12> decoder;
 /*
  * Initializes FastLED library
  *
@@ -25,7 +22,7 @@ void drawPixelCallback(int16_t x, int16_t y, uint8_t red, uint8_t green, uint8_t
 void inicializeFastled()
 {
 
-    FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(canvas.getBuffer(), NUM_LEDS);
+    FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(canvas.getBuffer(), NUM_LEDS).setCorrection(TypicalSMD5050);
     FastLED.setBrightness(BRIGHTNESS);
     set_max_power_in_volts_and_milliamps(PANEL_VOLTAGE, PSU_CURRENT_MILIAMPS);
 }
@@ -188,9 +185,12 @@ void initiateDecoding()
 
 void decodeFrame()
 {
-    if(decoder.decodeFrame() < 0)
+    if (decoder.decodeFrame() < 0)
     {
         // There's an error with this GIF, go to the next one
         Serial.println("Error decoding");
     }
+    FastLED.show();
+
+    Serial.println("FRAME");
 }

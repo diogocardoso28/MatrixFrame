@@ -1,5 +1,6 @@
 #include <Arduino.h>
-#include <FS.h>
+#include "FS.h"
+#include "filesystem.h"
 
 extern File gifFile;
 
@@ -40,4 +41,5 @@ int openGif(char filePath[])
         Serial.println("Error opening GIF file");
         return -1;
     }
-}
+    return 0;
+};

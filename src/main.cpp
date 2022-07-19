@@ -1,22 +1,7 @@
 #include <Arduino.h>
-#include <FastLED.h>
-#include <FastLED_GFX.h>
-#include <GifDecoder.h>
 #include <string.h>
 #include <FS.h>
-
-#define LED_PIN 2
-#define COLOR_ORDER GRB
-#define CHIPSET WS2812B
-#define BRIGHTNESS 30
-
-#define PANEL_VOLTAGE 5
-#define PSU_CURRENT_MILIAMPS 1500
-
-#define CANVAS_WIDTH 16
-#define CANVAS_HEIGHT 16
-
-#define NUM_LEDS 256
+#include "displayFunctions.h"
 
 // Custom Function Files
 #include "gammaTable.c"
@@ -26,13 +11,11 @@
 // Opens gif file
 
 File gifFile;
-
-GifDecoder<CANVAS_WIDTH, CANVAS_HEIGHT, 12> decoder;
-
+int changed = 0;
 void setup()
 {
   Serial.begin(9600);
-
+  inicializeFastled();
   bool success = SPIFFS.begin();
   if (!success)
   {
@@ -53,13 +36,18 @@ void setup()
   Serial.print(str);
 
   configGifDecoder();
-
+  openGif("/gif/rainbow.gif");
   initiateDecoding();
   // displayJpegMatrix("/mario16.jpg");
-  openGif("/gif/nyan.gif");
 }
 
 void loop()
 {
+  if (millis() > 5000 && changed == 0)
+  {
+    openGif("/gif/earth.gif");
+    // initiateDecoding();
+    changed = 1;
+  }
   decodeFrame();
 }
