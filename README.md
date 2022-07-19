@@ -1,2 +1,5 @@
 # MatrixFrame
 Wemos d1 mini and 16x16 led matrix based Gif player
+
+All of this software at this stage is made for a 16x16, so I highly reccomend you only use it with said pannel.\
+To configure pannel settings head to include\displayFunctions.h and change settings to your need
