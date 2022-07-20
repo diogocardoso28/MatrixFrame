@@ -14,6 +14,7 @@ GFXcanvas canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
 CRGB leds[NUM_LEDS];
 
 GifDecoder<CANVAS_WIDTH, CANVAS_HEIGHT, 12> decoder;
+
 /*
  * Initializes FastLED library
  *
@@ -165,12 +166,13 @@ void configGifDecoder()
     decoder.setUpdateScreenCallback(updateScreenCallback);
     decoder.setDrawPixelCallback(drawPixelCallback);
 
-    decoder.setFileSeekCallback(fileSeekCallback);
-    decoder.setFilePositionCallback(filePositionCallback);
-    decoder.setFileReadCallback(fileReadCallback);
+    decoder.setFileSeekCallback(&Filesystem::fileSeekCallback);
 
-    decoder.setFileReadBlockCallback(fileReadBlockCallback);
-    decoder.setFileSizeCallback(fileSizeCallback);
+    decoder.setFilePositionCallback(&Filesystem::filePositionCallback);
+    decoder.setFileReadCallback(&Filesystem::fileReadCallback);
+
+    decoder.setFileReadBlockCallback(&Filesystem::fileReadBlockCallback);
+    decoder.setFileSizeCallback(&Filesystem::fileSizeCallback);
 
     FastLED.show();
 }
@@ -191,6 +193,4 @@ void decodeFrame()
         Serial.println("Error decoding");
     }
     FastLED.show();
-
-    Serial.println("FRAME");
 }

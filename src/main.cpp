@@ -9,13 +9,14 @@
 #include "filesystem.h"
 
 // Opens gif file
-
-File gifFile;
 int changed = 0;
+Filesystem filesystem;
+
 void setup()
 {
   Serial.begin(9600);
   inicializeFastled();
+
   bool success = SPIFFS.begin();
   if (!success)
   {
@@ -36,16 +37,17 @@ void setup()
   Serial.print(str);
 
   configGifDecoder();
-  openGif("/gif/rainbow.gif");
+  Filesystem::openGif("/gif/rainbow.gif");
   initiateDecoding();
   // displayJpegMatrix("/mario16.jpg");
 }
 
 void loop()
 {
+
   if (millis() > 5000 && changed == 0)
   {
-    openGif("/gif/earth.gif");
+    Filesystem::openGif("/gif/earth.gif");
     // initiateDecoding();
     changed = 1;
   }

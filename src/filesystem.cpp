@@ -2,41 +2,39 @@
 #include "FS.h"
 #include "filesystem.h"
 
-extern File gifFile;
-
-bool fileSeekCallback(unsigned long position)
+bool Filesystem::fileSeekCallback(unsigned long position)
 {
-    return gifFile.seek(position);
+    return instance->gifFile.seek(position);
 }
 
-unsigned long filePositionCallback(void)
+unsigned long Filesystem::filePositionCallback(void)
 {
-    return gifFile.position();
+    return instance->gifFile.position();
 }
 
-int fileReadCallback(void)
+int Filesystem::fileReadCallback(void)
 {
-    return gifFile.read();
+    return instance->gifFile.read();
 }
 
-int fileSizeCallback(void)
+int Filesystem::fileSizeCallback(void)
 {
-    return gifFile.size();
+    return instance->gifFile.size();
 }
 
-int fileReadBlockCallback(void *buffer, int numberOfBytes)
+int Filesystem::fileReadBlockCallback(void *buffer, int numberOfBytes)
 {
-    return gifFile.read((uint8_t *)buffer, numberOfBytes);
+    return instance->gifFile.read((uint8_t *)buffer, numberOfBytes);
 }
 
-int openGif(char filePath[])
+int Filesystem::openGif(char filePath[])
 {
-    if (gifFile)
-        gifFile.close();
+    if (instance->gifFile)
+        instance->gifFile.close();
 
     // Attempt to open the file for reading
-    gifFile = SPIFFS.open(filePath, "r");
-    if (!gifFile)
+    instance->gifFile = SPIFFS.open(filePath, "r");
+    if (!instance->gifFile)
     {
         Serial.println("Error opening GIF file");
         return -1;

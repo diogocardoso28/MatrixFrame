@@ -3,11 +3,24 @@
 #ifndef FILESYSTEM_H_
 #define FILESYSTEM_H_
 
-// Code for header body
-bool fileSeekCallback(unsigned long position);
-unsigned long filePositionCallback(void);
-int fileReadCallback(void);
-int fileSizeCallback(void);
-int fileReadBlockCallback(void *buffer, int numberOfBytes);
-int openGif(char filePath[]);
+class Filesystem
+{
+    static inline Filesystem *instance;
+
+public:
+    Filesystem()
+    {
+        instance = this;
+    }
+
+    static bool fileSeekCallback(unsigned long position);
+    static unsigned long filePositionCallback(void);
+    static int fileReadCallback(void);
+    static int fileSizeCallback(void);
+    static int fileReadBlockCallback(void *buffer, int numberOfBytes);
+    static int openGif(char filePath[]);
+
+private:
+    File gifFile;
+};
 #endif // FILESYSTEM_H_
