@@ -1,0 +1,8 @@
+{
+    "ssid": "YOUR WI-FI SSID",
+    "password": "YOUR WI-FI PASSWORD",
+    "apSsid": "GifFrame",
+    "apPassword": "frame1234",
+    "apMode": false,
+    "autoAp": true
+}
