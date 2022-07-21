@@ -4,6 +4,7 @@
         "jpegdecoder.h": "c",
         "displayfunctions.h": "c",
         "typeinfo": "cpp",
-        "gammatable.c": "cpp"
+        "gammatable.c": "cpp",
+        "string": "cpp"
     }
 }
