@@ -39,3 +39,8 @@ String Settings::getApPassword()
 {
     return wifiConfigurations["apPassword"].as<String>();
 }
+
+DynamicJsonDocument Settings::getWifiSettings() // Returns json Document
+{
+    return wifiConfigurations;
+}

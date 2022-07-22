@@ -30,7 +30,7 @@ void Wifi::connect()
         while (WiFi.status() != WL_CONNECTED)
         {
             Serial.print(".");
-            delay(500); // For some reason delay(was not working)
+            delay(500);
             if (millis() > 20000)
             {
                 WiFi.disconnect();
@@ -39,7 +39,6 @@ void Wifi::connect()
                 {
                     Serial.println("Error while connecting to wifi, initializing Wifi Hotspot");
                     initializeWifiAp();
-                    // startWebServer();
                     return;
                 }
                 else
@@ -49,27 +48,26 @@ void Wifi::connect()
                 }
             }
         }
+        WiFi.setSleep(false);
         Serial.println("");
         Serial.println("Wifi Connected Successfully!");
         Serial.print("Ip address: ");
         Serial.println(WiFi.localIP());
         Serial.println(WiFi.RSSI());
         Serial.println("");
-        WiFi.setHostname("Frame"); // define hostname
+        WiFi.setHostname("frame"); // define hostname
         // Define mdns
-        if (!MDNS.begin("Frame"))
+        if (!MDNS.begin("frame"))
         {
             Serial.println("Error starting mDNS");
             return;
         }
-
-        // startWebServer();
+        Serial.println("mDNS responder started");
     }
     else
     {
         Serial.println("Starting AP mode!");
         initializeWifiAp();
-        // startWebServer();
     }
 }
 

@@ -13,7 +13,7 @@ Filesystem::Filesystem()
         Serial.println("Error mounting the file system");
         return;
     }
-    Serial.println("Contudo do Sistema de Ficheiros:");
+    Serial.println("Filesystem content:");
     String str = "";
     Dir dir = SPIFFS.openDir("/");
     while (dir.next())

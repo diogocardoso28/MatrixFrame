@@ -3,16 +3,16 @@
 #include <FS.h>
 #include "displayFunctions.h"
 #include "settings.h"
-#include "wifi.h"
 
 // Custom Function Files
 #include "gammaTable.c"
 #include "displayFunctions.h"
 #include "filesystem.h"
+#include "webserver.h"
 
 Filesystem filesystem;
 Settings settings;
-Wifi wifi;
+Webserver webserver;
 
 // Opens gif file
 int changed = 0;
@@ -23,7 +23,7 @@ void setup()
     Serial.begin(9600);
 
   // iniclizations
-  wifi.connect();
+  webserver.startWebServer();
   inicializeFastled();
   configGifDecoder();
 
@@ -33,7 +33,7 @@ void setup()
 
 void loop()
 {
-  if (millis() > 5000 && changed == 0)
+  if (millis() > 50000 && changed == 0)
   {
     Filesystem::openGif("/gif/earth.gif");
     changed = 1;

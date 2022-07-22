@@ -17,6 +17,7 @@ public:
     String getWifiPassword();
     String getApSSID();
     String getApPassword();
+    DynamicJsonDocument getWifiSettings();
 
 private:
     DynamicJsonDocument wifiConfigurations = DynamicJsonDocument(500);

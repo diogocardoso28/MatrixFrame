@@ -5,6 +5,7 @@
         "displayfunctions.h": "c",
         "typeinfo": "cpp",
         "gammatable.c": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "random": "cpp"
     }
 }
