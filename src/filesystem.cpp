@@ -1,5 +1,7 @@
 #include <Arduino.h>
 #include "FS.h"
+#include "SPIFFS.h"
+
 #include "filesystem.h"
 #include "displayFunctions.h"
 Filesystem::Filesystem()
@@ -15,11 +17,11 @@ Filesystem::Filesystem()
     }
     Serial.println("Filesystem content:");
     String str = "";
-    Dir dir = SPIFFS.openDir("/");
-    while (dir.next())
-    {
-        str += dir.fileName() + " / " + dir.fileSize() + "\r\n";
-    }
+    // Dir dir = SPIFFS.openDir("/");
+    // while (dir.next())
+    // {
+    //     str += dir.fileName() + " / " + dir.fileSize() + "\r\n";
+    // }
     Serial.println(str);
 }
 

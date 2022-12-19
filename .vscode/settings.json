@@ -6,6 +6,8 @@
         "typeinfo": "cpp",
         "gammatable.c": "cpp",
         "string": "cpp",
-        "random": "cpp"
+        "random": "cpp",
+        "*.tcc": "c",
+        "fstream": "c"
     }
 }

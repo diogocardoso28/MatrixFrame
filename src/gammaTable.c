@@ -1,6 +1,7 @@
 #include <Arduino.h>
+// PROGMEM
 
-const uint8_t PROGMEM gamma8[] = {
+const uint8_t gamma8[] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2,

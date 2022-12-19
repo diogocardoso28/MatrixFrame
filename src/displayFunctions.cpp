@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include <JPEGDecoder.h>
 #include <string.h>
 #include <FastLED.h>
 #include <FastLED_GFX.h>
@@ -33,84 +32,84 @@ void inicializeFastled()
  * Takes image path as argument
  * Return void
  */
-void displayJpegMatrix(String path)
-{
-    Serial.println("Aqui");
-    canvas.fillScreen(CRGB::Black);
-    FastLED.show();
-    delay(1000);
+// void displayJpegMatrix(String path)
+// {
+//     Serial.println("Aqui");
+//     canvas.fillScreen(CRGB::Black);
+//     FastLED.show();
+//     delay(1000);
 
-    // canvas.fillScreen(CRGB::Black);
-    if (JpegDec.decodeFsFile(path))
-    {
-        Serial.println("===============");
-        Serial.println("JPEG image info");
-        Serial.println("===============");
-        Serial.print("Width      :");
-        Serial.println(JpegDec.width);
-        Serial.print("Height     :");
-        Serial.println(JpegDec.height);
-        Serial.print("Components :");
-        Serial.println(JpegDec.comps);
-        Serial.print("MCU / row  :");
-        Serial.println(JpegDec.MCUSPerRow);
-        Serial.print("MCU / col  :");
-        Serial.println(JpegDec.MCUSPerCol);
-        Serial.print("Scan type  :");
-        Serial.println(JpegDec.scanType);
-        Serial.print("MCU width  :");
-        Serial.println(JpegDec.MCUWidth);
-        Serial.print("MCU height :");
-        Serial.println(JpegDec.MCUHeight);
-        Serial.println("===============");
-        Serial.println("");
-        Serial.println("Aqui");
+//     // canvas.fillScreen(CRGB::Black);
+//     if (JpegDec.decodeFsFile(path))
+//     {
+//         Serial.println("===============");
+//         Serial.println("JPEG image info");
+//         Serial.println("===============");
+//         Serial.print("Width      :");
+//         Serial.println(JpegDec.width);
+//         Serial.print("Height     :");
+//         Serial.println(JpegDec.height);
+//         Serial.print("Components :");
+//         Serial.println(JpegDec.comps);
+//         Serial.print("MCU / row  :");
+//         Serial.println(JpegDec.MCUSPerRow);
+//         Serial.print("MCU / col  :");
+//         Serial.println(JpegDec.MCUSPerCol);
+//         Serial.print("Scan type  :");
+//         Serial.println(JpegDec.scanType);
+//         Serial.print("MCU width  :");
+//         Serial.println(JpegDec.MCUWidth);
+//         Serial.print("MCU height :");
+//         Serial.println(JpegDec.MCUHeight);
+//         Serial.println("===============");
+//         Serial.println("");
+//         Serial.println("Aqui");
 
-        uint32_t mcuPixels = 256;
-        uint8_t row = 0;
-        uint8_t col = 0;
-        uint16_t *pImg;
+//         uint32_t mcuPixels = 256;
+//         uint8_t row = 0;
+//         uint8_t col = 0;
+//         uint16_t *pImg;
 
-        uint8_t b;
-        uint8_t g;
-        uint8_t r;
+//         uint8_t b;
+//         uint8_t g;
+//         uint8_t r;
 
-        int max_x = JpegDec.width, max_y = JpegDec.height;
+//         int max_x = JpegDec.width, max_y = JpegDec.height;
 
-        while (JpegDec.read())
-        {
-            pImg = JpegDec.pImage;
-            int mcu_x = JpegDec.MCUx;
-            for (int x = 0; x < max_y; x++)
-            {
-                for (int y = 0; y < max_y; y++)
-                {
-                    b = uint8_t((*pImg & 0x001F) << 3) + 7;   // 5 LSB for blue
-                    g = uint8_t((*pImg & 0x07C0) >> 3) + 7;   // 6 'middle' bits for green
-                    r = uint8_t((*pImg++ & 0xF800) >> 8) + 7; // 5 MSB for red
-                    Serial.print("Pixel : ");
-                    Serial.print(x);
-                    Serial.print(",");
-                    Serial.print(y);
+//         while (JpegDec.read())
+//         {
+//             pImg = JpegDec.pImage;
+//             int mcu_x = JpegDec.MCUx;
+//             for (int x = 0; x < max_y; x++)
+//             {
+//                 for (int y = 0; y < max_y; y++)
+//                 {
+//                     b = uint8_t((*pImg & 0x001F) << 3) + 7;   // 5 LSB for blue
+//                     g = uint8_t((*pImg & 0x07C0) >> 3) + 7;   // 6 'middle' bits for green
+//                     r = uint8_t((*pImg++ & 0xF800) >> 8) + 7; // 5 MSB for red
+//                     Serial.print("Pixel : ");
+//                     Serial.print(x);
+//                     Serial.print(",");
+//                     Serial.print(y);
 
-                    Serial.print(" r: ");
-                    Serial.print(r);
-                    Serial.print(" g: ");
-                    Serial.print(g);
-                    Serial.print(" b: ");
-                    Serial.println(b);
+//                     Serial.print(" r: ");
+//                     Serial.print(r);
+//                     Serial.print(" g: ");
+//                     Serial.print(g);
+//                     Serial.print(" b: ");
+//                     Serial.println(b);
 
-                    canvas.drawPixel(y, x, CRGB(pgm_read_byte(&gamma8[r]), pgm_read_byte(&gamma8[g]), pgm_read_byte(&gamma8[b])));
-                }
-            }
-            FastLED.show();
-        }
-    }
-    else
-    {
-        Serial.println("ERROR");
-    }
-}
+//                     canvas.drawPixel(y, x, CRGB(pgm_read_byte(&gamma8[r]), pgm_read_byte(&gamma8[g]), pgm_read_byte(&gamma8[b])));
+//                 }
+//             }
+//             FastLED.show();
+//         }
+//     }
+//     else
+//     {
+//         Serial.println("ERROR");
+//     }
+// }
 
 /*
  *Draws pixel on screen using canvas
@@ -184,7 +183,6 @@ void initiateDecoding()
         Serial.println("GIF DONE");
     }
 }
-
 void decodeFrame()
 {
     if (decoder.decodeFrame() < 0)

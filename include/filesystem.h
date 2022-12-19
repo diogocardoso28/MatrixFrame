@@ -1,12 +1,14 @@
 #include <Arduino.h>
+#include <ArduinoJson.h>
 #include "FS.h"
+#include "SPIFFS.h"
 
 #ifndef FILESYSTEM_H_
 #define FILESYSTEM_H_
 
 class Filesystem
 {
-    static inline Filesystem *instance;
+    static Filesystem *instance;
 
 public:
     Filesystem();

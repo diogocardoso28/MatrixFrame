@@ -1,11 +1,10 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include <ArduinoJson.h>
-#include <ESP8266mDNS.h>
 #include "ESPAsyncWebServer.h"
 #include "filesystem.h"
 #include "settings.h"
-#include "wifi.h"
+#include "wifi_coms.h"
 
 extern Settings settings;
 
@@ -57,12 +56,12 @@ void Wifi::connect()
         Serial.println("");
         WiFi.setHostname("frame"); // define hostname
         // Define mdns
-        if (!MDNS.begin("frame"))
-        {
-            Serial.println("Error starting mDNS");
-            return;
-        }
-        Serial.println("mDNS responder started");
+        // if (!MDNS.begin("frame"))
+        // {
+        //     Serial.println("Error starting mDNS");
+        //     return;
+        // }
+        // Serial.println("mDNS responder started");
     }
     else
     {
@@ -84,9 +83,9 @@ void Wifi::initializeWifiAp()
     Serial.println(WiFi.softAPIP());
     WiFi.setHostname("rfid"); // define hostname
     // Define mdns
-    if (!MDNS.begin("rfid"))
-    {
-        Serial.println("Error starting mDNS");
-        return;
-    }
+    // if (!MDNS.begin("rfid"))
+    // {
+    //     Serial.println("Error starting mDNS");
+    //     return;
+    // }
 }

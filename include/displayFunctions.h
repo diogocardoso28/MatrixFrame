@@ -1,4 +1,5 @@
 #include <Arduino.h>
+
 #include <string.h>
 #include <FastLED.h>
 #include <FastLED_GFX.h>
@@ -15,7 +16,7 @@
 
 #define BRIGHTNESS 30
 
-#define LED_PIN 2
+#define LED_PIN 26
 #define COLOR_ORDER GRB
 #define CHIPSET WS2812B
 
@@ -23,7 +24,6 @@
 #define PSU_CURRENT_MILIAMPS 1500
 /**********************************************/
 void inicializeFastled();
-void displayJpegMatrix(String path);
 void drawPixel(int x, int y, CRGB COLOR);
 void screenClearCallback(void);
 void updateScreenCallback(void);

@@ -2,9 +2,10 @@
 #include <ArduinoJson.h>
 #include "ESPAsyncWebServer.h"
 #include "webserver.h"
-#include "wifi.h"
+#include "wifi_coms.h"
 #include "settings.h"
 #include "FS.h"
+#include "SPIFFS.h"
 
 extern Settings settings;
 

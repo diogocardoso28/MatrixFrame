@@ -1,11 +1,11 @@
 #include <Arduino.h>
 #include <string.h>
-#include <FS.h>
-#include "displayFunctions.h"
-#include "settings.h"
+#include "FS.h"
+#include <WiFi.h>
 
 // Custom Function Files
 #include "gammaTable.c"
+#include "settings.h"
 #include "displayFunctions.h"
 #include "filesystem.h"
 #include "webserver.h"
